@@ -1,7 +1,8 @@
-import 'package:chatt_app/helpers/mostrar_alerta.dart';
-import 'package:chatt_app/widgets/boton_azul.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:chatt_app/helpers/mostrar_alerta.dart';
+import 'package:chatt_app/services/socket_service.dart';
+import 'package:chatt_app/widgets/boton_azul.dart';
 import 'package:chatt_app/widgets/labels.dart';
 import 'package:chatt_app/widgets/custom_input.dart';
 import 'package:chatt_app/widgets/logo.dart';
@@ -61,6 +62,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -86,6 +88,7 @@ class __FormState extends State<_Form> {
               FocusScope.of(context).unfocus();
               final loginOk = await authService.login(emailController.text.trim(), passwordController.text.trim());
               if(loginOk){
+                socketService.connect();
                 Navigator.pushReplacementNamed(context, 'usuarios');
               }else{
                 mostrarAlerta(context, 'Login incorrecto', 'Usuario o contraseña invalida');
